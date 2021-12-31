@@ -26,36 +26,36 @@ public class UserResource {
 
 	@RequestMapping(method=RequestMethod.GET)
 	public ResponseEntity<List<UserDto>> findAll(){
-		List<User> list = service.findAll();
-		List<UserDto> listDto = list.stream().map(x -> new UserDto(x)).collect(Collectors.toList());
+		List<User> list = service.findAll(); // list every user in db
+		List<UserDto> listDto = list.stream().map(x -> new UserDto(x)).collect(Collectors.toList()); // transform  list  to data transfer object then back to list
 		return ResponseEntity.ok().body(listDto);
 	}
 	
 	@RequestMapping(value="/{id}", method=RequestMethod.GET)
 	public ResponseEntity<UserDto> findById(@PathVariable String id){
-		User obj = service.findById(id);
-		return ResponseEntity.ok().body(new UserDto(obj));
+		User obj = service.findById(id); //search for id
+		return ResponseEntity.ok().body(new UserDto(obj)); // return my object
 	}
 	
 	@RequestMapping(method=RequestMethod.POST)
 	public ResponseEntity<Void> insert(@RequestBody UserDto objDto){
-		User obj = service.fromDto(objDto);
-		obj = service.insert(obj);
-		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri();
+		User obj = service.fromDto(objDto); // saves dto into user
+		obj = service.insert(obj); // saves user into db
+		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri(); 
 		return ResponseEntity.created(uri).build();
 	}
 	
 	@RequestMapping(value="/{id}", method=RequestMethod.DELETE)
 	public ResponseEntity<UserDto> delete(@PathVariable String id){
-		service.delete(id);
-		return ResponseEntity.noContent().build();
+		service.delete(id); // delete data
+		return ResponseEntity.noContent().build(); //display 202 if ok
 	}
 	
 	@RequestMapping(value="/{id}", method=RequestMethod.PUT)
 	public ResponseEntity<Void> update(@RequestBody UserDto objDto, @PathVariable String id){
-		User obj = service.fromDto(objDto);
-		obj.setId(id);
-		obj = service.update(obj);
+		User obj = service.fromDto(objDto); // saves dto into user
+		obj.setId(id); //saves id from url to object
+		obj = service.update(obj); // update object 
 		return ResponseEntity.noContent().build();
 	}
 	
